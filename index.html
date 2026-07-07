@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重定向到域名鸡</title>
+    <script>
+        (function() {
+            // ★★★ 请将此处替换为您的目标域名（包含协议，例如 https://） ★★★
+            const NEW_DOMAIN = 'https://ymj.netsince.com';
+
+            // 获取当前完整路径（包含路径和查询参数）
+            const currentPath = window.location.pathname + window.location.search + window.location.hash;
+
+            // 构建新 URL：新域名 + 原始路径 + 参数 + hash
+            const newUrl = NEW_DOMAIN + currentPath;
+
+            // 使用 replace 进行 301 重定向（状态码 301 表示永久移动）
+            // 注意：replace 不会在浏览器历史中留下当前页面的记录，更符合 301 语义
+            window.location.replace(newUrl);
+
+            // 安全后备：如果 replace 因某些原因未生效，设置 location.href 作为备选
+            // 但 replace 是标准方法，绝大多数浏览器都支持；此处仅作为防御性编程
+            // 为防止无限循环，只在不支持 replace 的极端情况下执行（实际不会发生）
+            // 但为了更严谨，我们加上一个超时检查（一般不会触发）
+            setTimeout(function() {
+                // 如果 2 秒后页面还未跳转，强制跳转（兜底）
+                if (window.location.href !== newUrl) {
+                    window.location.href = newUrl;
+                }
+            }, 2000);
+        })();
+    </script>
+    <!-- 纯文本提示（在 JS 生效前展示，或 JS 被禁用时显示） -->
+    <noscript>
+        <meta http-equiv="refresh" content="0; url=https://ymj.netsince.com">
+        <p style="font-family: sans-serif; font-size: 1.2rem; padding: 2rem; text-align: center; background: #f8f9fa;">
+            您的浏览器未启用 JavaScript，手动访问：<a href="https://ymj.netsince.com">https://ymj.netsince.com</a>
+        </p>
+    </noscript>
+    <!-- 优雅降级：如果 JS 正常，内容不会显示；如果禁用 JS，显示友好提示 -->
+    <style>
+        /* 仅当 JS 被禁用时，noscript 内的内容才会显示；此处额外美化 */
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f1f3f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        /* 让 noscript 样式更醒目 */
+        noscript {
+            display: block;
+            width: 100%;
+            max-width: 720px;
+            margin: 2rem;
+            padding: 2rem 2.5rem;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            border-left: 6px solid #ff6b6b;
+            text-align: center;
+            line-height: 1.6;
+        }
+        noscript p {
+            margin: 0.5rem 0;
+        }
+        noscript a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+        noscript a:hover {
+            border-bottom-color: #1a73e8;
+        }
+        /* 如果 JS 正常运行，不显示任何额外内容，保持干净 */
+        .js-message {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <noscript>
+        <p>
+            🔄 自动重定向失败，请点击下方链接手动访问：
+        </p>
+        <p style="font-size: 1.4rem; margin-top: 0.8rem;">
+            <a href="https://ymj.netsince.com">https://ymj.netsince.com</a>
+        </p>
+        <p style="font-size: 0.9rem; color: #6c757d; margin-top: 1.5rem;">
+        </p>
+    </noscript>
+    <!-- 额外提示（仅供调试，正常重定向后用户看不到） -->
+    <div style="display: none;">301 重定向执行中 ...</div>
+</body>
+</html>
